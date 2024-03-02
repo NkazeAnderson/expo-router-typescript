@@ -1,27 +1,19 @@
 import 'expo-dev-client'
-import { ThemeProvider as NavProvider } from '@react-navigation/native'
-import { Slot } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
-import styled, { ThemeProvider, type DefaultTheme } from 'styled-components/native'
-import { appTheme, navTheme } from 'src/config/theme'
-
+import { View } from 'react-native'
+import { Stack } from 'expo-router'
+//import { ActivityIndicator } from 'react-native-paper'
+import { PaperProvider } from 'react-native-paper'
+//import { Poppins_400Regular, Poppins_700Bold, Poppins_500Medium, useFonts } from '@expo-google-fonts/poppins'
 export default function AppLayout() {
   return (
-    <ThemeProvider theme={appTheme as DefaultTheme}>
-      <StatusBar style="light" />
-      <S.AppWrapper>
-        <NavProvider value={navTheme}>
-          <Slot screenOptions={{ headerShown: false }} />
-        </NavProvider>
-      </S.AppWrapper>
-    </ThemeProvider>
+    <PaperProvider>
+      <View className="flex flex-1 ">
+        <Stack
+          screenOptions={{
+            headerShown: false
+          }}
+        />
+      </View>
+    </PaperProvider>
   )
-}
-
-const S = {
-  AppWrapper: styled.SafeAreaView`
-    flex: 1;
-    flex-direction: column;
-    background-color: ${appTheme.background};
-  `
 }

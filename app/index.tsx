@@ -1,41 +1,52 @@
-import styled from 'styled-components/native'
-import { Stack } from 'expo-router'
-import LinkButton from 'src/components/LinkButton'
-import ScreenLayout from 'src/components/ScreenLayout'
-
-export default function HomeScreen() {
+import { Image, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import boarding1 from 'src/assets/images/boarding1.png'
+import { typograhpy } from 'src/config/theme'
+import ButtonComponent from 'src/components/ButtonComponent'
+import { router } from 'expo-router'
+import { Poppins_400Regular, Poppins_700Bold, Poppins_500Medium, Poppins_400Regular_Italic, useFonts } from '@expo-google-fonts/poppins'
+import { ActivityIndicator } from 'react-native-paper'
+export default function BoardingScreen() {
+  const [fontsLoaded] = useFonts({
+    Poppins_500Medium,
+    Poppins_400Regular,
+    Poppins_700Bold,
+    Poppins_400Regular_Italic
+  })
+  if (!fontsLoaded) {
+    return (
+      <View className="flex flex-1 items-center bg-grayBackground">
+        <View className="my-auto">
+          <ActivityIndicator />
+        </View>
+      </View>
+    )
+  }
+  router.replace('/tabs/home')
+  const gotoNextPage = () => {
+    router.push('/boarding1')
+  }
+  const Skip = () => {
+    router.replace('/login')
+  }
   return (
-    <ScreenLayout testID="home-screen-layout">
-      <S.Content testID="home-screen-content">
-        <Stack.Screen options={{ title: 'Home Screen' }} />
-
-        <S.Title testID="home-screen-title">🏠</S.Title>
-        <S.Text testID="home-screen-text">Go to app/index.tsx to edit</S.Text>
-
-        <LinkButton href="/second" text="Go To Second Screen" />
-      </S.Content>
-    </ScreenLayout>
+    <SafeAreaView className=" bg-ligtBackground flex flex-1 px-7">
+      <View className="flex flex-1 justify-center items-center">
+        <Image source={boarding1} />
+      </View>
+      <View>
+        <Text className=" text-primaryText text-center" style={typograhpy.h1}>
+          Buy <Text className="text-primary"> Properties</Text> in Cameroon <Text className="text-primary"> legally</Text>
+        </Text>
+      </View>
+      <View className="flex flex-row justify-between items-center h-[20vh]">
+        <View>
+          <ButtonComponent color="grayText" text="Skip" action={Skip} />
+        </View>
+        <View>
+          <ButtonComponent text="Next" color="whiteText" background="primary" action={gotoNextPage} />
+        </View>
+      </View>
+    </SafeAreaView>
   )
-}
-
-const S = {
-  Content: styled.View`
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-  `,
-  Title: styled.Text`
-    color: ${(p) => p.theme.primary};
-    font-family: helvetica;
-    font-weight: 900;
-    font-size: ${(p) => p.theme.size(200, 'px')};
-    margin-bottom: ${(p) => p.theme.size(10, 'px')};
-  `,
-  Text: styled.Text`
-    color: ${(p) => p.theme.primary};
-    font-family: helvetica;
-    font-weight: 700;
-    font-size: ${(p) => p.theme.size(15, 'px')};
-    margin-bottom: ${(p) => p.theme.size(15, 'px')};
-  `
 }

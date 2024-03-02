@@ -7,6 +7,8 @@ module.exports = function (api) {
       '@babel/plugin-proposal-export-namespace-from',
       // React Native Reanimated
       'react-native-reanimated/plugin',
+      // Use Native Wind CSS
+      'nativewind/babel',
       // Use Absolute Imports
       ['module-resolver', { alias: { src: './src' } }]
     ]
