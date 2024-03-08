@@ -17,7 +17,6 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
   }
   const videoRef: React.MutableRefObject<Video | null> = useRef(null)
   const [videoStatus, setVideoStatus] = useState<AVPlaybackStatus>()
-  console.log(videoStatus?.isLoaded && videoStatus.isPlaying)
 
   return (
     <Pressable

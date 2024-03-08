@@ -9,9 +9,9 @@ import SectionHeading from 'src/components/SectionHeading'
 import PropertyCard from 'src/components/PropertyCard'
 import { ScrollView } from 'react-native'
 import LongPropertyCard from 'src/components/LongPropertyCard'
-import { properties, users } from 'src/config/constants'
+import { properties, propertyTypes, users } from 'src/config/constants'
 import Filter from 'src/components/Filter'
-import FilterIconButtons, { propertyTypeT } from 'src/components/FilterIconButtons'
+import FilterIconButtons from 'src/components/FilterIconButtons'
 import { FlatList } from 'react-native'
 const user = users[0]
 function getTimePeriod(time: Date) {
@@ -27,16 +27,37 @@ function getTimePeriod(time: Date) {
     return 'night'
   }
 }
-const propertyType: propertyTypeT[] = ['Apartment', 'Land', 'Business Place', 'Self Content']
+
 const home = () => {
   const [toggleFilter, setToggleFilter] = useState(false)
+  const [refresh, setRefresh] = useState(false)
+  const [filters, setFilters] = useState<Filters>({
+    propertyType: 'Apartment',
+    price: 15000,
+    isMonthly: true,
+    location: 'Bamenda',
+    rooms: 1,
+    toilet: 1,
+    kitchen: 1
+  })
+
   const time = new Date()
   return (
     <View className="flex flex-1 relative">
       <ScrollView showsVerticalScrollIndicator={false} className="flex flex-1 px-4 ">
         <View className="flex flex-row space-x-2 items-center">
           <View className="flex flex-grow">
-            <InputComponent placeholder="Search" icon="home-search-outline" />
+            <InputComponent
+              placeholder="Search"
+              icon="home-search-outline"
+              value={filters.location}
+              setValue={(value) => {
+                filters.location = value
+                setFilters(filters)
+                setRefresh(!refresh)
+                //setToggleFilter(!toggleFilter)
+              }}
+            />
           </View>
           <View className="h-full py-2">
             <View className=" p-1 bg-primary rounded-2xl">
@@ -52,10 +73,20 @@ const home = () => {
         </View>
 
         <FlatList
-          data={propertyType}
+          data={propertyTypes}
           horizontal
           renderItem={({ item, index }) => {
-            return <FilterIconButtons key={index} propertyType={item} />
+            return (
+              <FilterIconButtons
+                filter={filters}
+                setFilters={(filter) => {
+                  setFilters(filter)
+                  setRefresh(!refresh)
+                }}
+                key={index}
+                propertyType={item}
+              />
+            )
           }}
           contentContainerStyle={{ marginTop: 10 }}
         />
@@ -80,14 +111,16 @@ const home = () => {
                 Filter
               </Text>
             </View>
-            <ScrollView className="flex-grow">
-              <Filter />
-              <Filter />
-              <Filter />
-              <Filter />
+            <ScrollView className="flex-grow pb-4">
+              <Filter
+                filters={filters}
+                setFilters={(filter) => {
+                  setFilters(filter)
+                }}
+              />
             </ScrollView>
             <View className="p-2">
-              <ButtonComponent text="Find" color="whiteText" background="primary" />
+              <ButtonComponent action={() => setToggleFilter(!toggleFilter)} text="Find" color="whiteText" background="primary" />
             </View>
           </View>
         </View>

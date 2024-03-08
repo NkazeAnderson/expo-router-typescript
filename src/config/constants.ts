@@ -69,3 +69,4 @@ export const properties = [
     description: 'This is an newly constructed house with some amazing stuffs'
   }
 ]
+export const propertyTypes: propertyTypes[] = ['Apartment', 'Land', 'Business Place', 'Self Content']
