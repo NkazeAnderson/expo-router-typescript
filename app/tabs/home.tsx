@@ -11,6 +11,8 @@ import { ScrollView } from 'react-native'
 import LongPropertyCard from 'src/components/LongPropertyCard'
 import { properties, users } from 'src/config/constants'
 import Filter from 'src/components/Filter'
+import FilterIconButtons, { propertyTypeT } from 'src/components/FilterIconButtons'
+import { FlatList } from 'react-native'
 const user = users[0]
 function getTimePeriod(time: Date) {
   const hours = time.getHours()
@@ -25,6 +27,7 @@ function getTimePeriod(time: Date) {
     return 'night'
   }
 }
+const propertyType: propertyTypeT[] = ['Apartment', 'Land', 'Business Place', 'Self Content']
 const home = () => {
   const [toggleFilter, setToggleFilter] = useState(false)
   const time = new Date()
@@ -48,11 +51,16 @@ const home = () => {
           </View>
         </View>
 
-        <View>
-          <Text>Icon Buttons</Text>
-        </View>
+        <FlatList
+          data={propertyType}
+          horizontal
+          renderItem={({ item, index }) => {
+            return <FilterIconButtons key={index} propertyType={item} />
+          }}
+          contentContainerStyle={{ marginTop: 10 }}
+        />
 
-        <View>
+        <View className="mt-5">
           <SectionHeading title="Recommended" link="See all" />
           <PropertyCard property={properties[0]} />
           <PropertyCard property={properties[1]} />

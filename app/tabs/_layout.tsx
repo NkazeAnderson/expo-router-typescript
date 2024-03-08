@@ -120,9 +120,6 @@ export default function TabLayout() {
             }
           }}
         />
-        <Tabs.Screen name="propertyDetails" options={{ href: null }} />
-        <Tabs.Screen name="messages" options={{ href: null }} />
-        <Tabs.Screen name="manageProperty" options={{ href: null }} />
       </Tabs>
       <StatusBar style="auto" animated />
     </View>

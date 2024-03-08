@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from 'react-native'
 import React from 'react'
-import { Tabs, router, useLocalSearchParams } from 'expo-router'
+import { Stack, router, useLocalSearchParams } from 'expo-router'
 import { colors, typograhpy } from 'src/config/theme'
 import SectionHeading from 'src/components/SectionHeading'
 import PropertyCard from 'src/components/PropertyCard'
@@ -54,11 +54,11 @@ const propertDetails = () => {
                   text="Message Agent"
                   color="whiteText"
                   background="primary"
-                  action={() => router.replace(`/tabs/messages?conversationId=1&propertyID=${propertyID}`)}
+                  action={() => router.push(`/stacks/messages?conversationId=1&propertyID=${propertyID}`)}
                 />
               </View>
               <View>
-                <ButtonComponent text="Save and Pay" color="whiteText" background="secondary" action={() => router.navigate('/tabs/payments')} />
+                <ButtonComponent text="Save and Pay" color="whiteText" background="secondary" action={() => router.push('/tabs/payments')} />
               </View>
             </>
           )}
@@ -69,7 +69,7 @@ const propertDetails = () => {
         <SectionHeading title="Others By Poster" link="View all" />
         <LongPropertyCard property={property} />
       </View>
-      <Tabs.Screen
+      <Stack.Screen
         options={{
           headerLeft: () => (
             <Pressable
