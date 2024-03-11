@@ -25,7 +25,12 @@ const Conversations = () => {
                 <Icon source={'chevron-left'} size={30} />
               </Pressable>
             ),
-            headerRight: () => <UserCard />
+            headerRight: () => (
+              <View className="w-[80vw]">
+                <UserCard />
+              </View>
+            ),
+            title: ''
           }}
         />
       </ScrollView>

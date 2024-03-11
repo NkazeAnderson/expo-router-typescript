@@ -1,5 +1,5 @@
 import { FlatList, Image, Pressable, Text, View } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Icon } from 'react-native-paper'
 import estatePlaceholder from '../assets/images/estatePlaceholder.jpg'
 import estatePlaceholder1 from '../assets/images/house1.png'
@@ -10,6 +10,7 @@ import { properties } from 'src/config/constants'
 import millify from 'millify'
 import { router } from 'expo-router'
 import { AVPlaybackStatus, ResizeMode, Video } from 'expo-av'
+import { globalStates } from 'app/tabs/home'
 
 function PropertyCard({ property, withImages }: { property: (typeof properties)[1]; withImages?: boolean }) {
   const viewPropertyDetails = () => {
@@ -18,6 +19,12 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
   const videoRef: React.MutableRefObject<Video | null> = useRef(null)
   const [videoStatus, setVideoStatus] = useState<AVPlaybackStatus>()
 
+  const setVideoState = globalStates((state) => state.setVideoState)
+  useCallback(() => {
+    if (videoRef instanceof Video) {
+      setVideoState(videoRef)
+    }
+  }, [videoRef])
   return (
     <Pressable
       onPress={!withImages ? viewPropertyDetails : () => {}}
@@ -96,7 +103,13 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
                   img = estatePlaceholder2
                 }
                 return (
-                  <Pressable key={index} className=" h-[35vh]" onPress={() => router.push('/stacks/picture')}>
+                  <Pressable
+                    key={index}
+                    className=" h-[35vh]"
+                    onPress={() => {
+                      videoRef.current?.pauseAsync()
+                      router.push('/stacks/picture')
+                    }}>
                     <Image className="rounded-lg h-full w-[70vw]" source={img} />
                   </Pressable>
                 )

@@ -13,7 +13,13 @@ import { properties, propertyTypes, users } from 'src/config/constants'
 import Filter from 'src/components/Filter'
 import FilterIconButtons from 'src/components/FilterIconButtons'
 import { FlatList } from 'react-native'
+import { create } from 'zustand'
+import { Video } from 'expo-av'
 const user = users[0]
+interface GlobalStates {
+  videoState: Video | null
+  setVideoState: (_state: Video | null) => void
+}
 function getTimePeriod(time: Date) {
   const hours = time.getHours()
   const minutes = time.getHours()
@@ -28,6 +34,10 @@ function getTimePeriod(time: Date) {
   }
 }
 
+export const globalStates = create<GlobalStates>()((set) => ({
+  videoState: null,
+  setVideoState: (_state) => set(() => ({ videoState: _state }))
+}))
 const home = () => {
   const [toggleFilter, setToggleFilter] = useState(false)
   const [refresh, setRefresh] = useState(false)

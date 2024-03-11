@@ -11,8 +11,10 @@ import Amenities from 'src/components/Amenities'
 import { properties, users } from 'src/config/constants'
 import AgentCard from 'src/components/AgentCard'
 import ButtonComponent from 'src/components/ButtonComponent'
+import { globalStates } from 'app/tabs/home'
 
 const propertDetails = () => {
+  const videoState = globalStates((state) => state.videoState)
   const { propertyID } = useLocalSearchParams<{ propertyID: string }>()
   const isPoster = false
   //   const property = properties[0]
@@ -54,11 +56,22 @@ const propertDetails = () => {
                   text="Message Agent"
                   color="whiteText"
                   background="primary"
-                  action={() => router.push(`/stacks/messages?conversationId=1&propertyID=${propertyID}`)}
+                  action={() => {
+                    videoState?.pauseAsync()
+                    router.push(`/stacks/messages?conversationId=1&propertyID=${propertyID}`)
+                  }}
                 />
               </View>
               <View>
-                <ButtonComponent text="Save and Pay" color="whiteText" background="secondary" action={() => router.push('/tabs/payments')} />
+                <ButtonComponent
+                  text="Save and Pay"
+                  color="whiteText"
+                  background="secondary"
+                  action={() => {
+                    videoState?.pauseAsync()
+                    router.push('/tabs/payments')
+                  }}
+                />
               </View>
             </>
           )}
