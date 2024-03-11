@@ -15,6 +15,8 @@ import FilterIconButtons from 'src/components/FilterIconButtons'
 import { FlatList } from 'react-native'
 import { create } from 'zustand'
 import { Video } from 'expo-av'
+import { Badge } from 'react-native-paper'
+import { router } from 'expo-router'
 const user = users[0]
 interface GlobalStates {
   videoState: Video | null
@@ -150,7 +152,15 @@ const home = () => {
           ),
           title: 'Home',
           headerTitleStyle: { display: 'none' },
-          headerRight: () => <Image className="w-[50px] h-[50px] rounded-full object-cover" source={profilePlaceholder} />
+          headerRight: () => (
+            <Pressable
+              onPress={() => {
+                router.push('/tabs/settings')
+              }}>
+              <Badge style={{ top: 10, zIndex: 5 }}>3</Badge>
+              <Image className="w-[50px] h-[50px] rounded-full object-cover" source={profilePlaceholder} />
+            </Pressable>
+          )
         }}
       />
     </View>

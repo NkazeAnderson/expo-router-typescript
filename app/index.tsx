@@ -22,7 +22,7 @@ export default function BoardingScreen() {
       </View>
     )
   }
-  router.replace('/stacks/manageProperty')
+  router.replace('/tabs/home')
   const gotoNextPage = () => {
     router.push('/boarding1')
   }
