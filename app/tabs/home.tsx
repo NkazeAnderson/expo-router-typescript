@@ -157,7 +157,7 @@ const home = () => {
               onPress={() => {
                 router.push('/tabs/settings')
               }}>
-              <Badge style={{ top: 10, zIndex: 5 }}>3</Badge>
+              <Badge style={{ right: -5, zIndex: 5, position: 'absolute' }}>3</Badge>
               <Image className="w-[50px] h-[50px] rounded-full object-cover" source={profilePlaceholder} />
             </Pressable>
           )

@@ -1,6 +1,6 @@
 import { Pressable, Text } from 'react-native'
 import React, { useState } from 'react'
-import { Tabs, router, useLocalSearchParams } from 'expo-router'
+import { Stack, router, useLocalSearchParams } from 'expo-router'
 import { colors, typograhpy } from 'src/config/theme'
 
 import { ScrollView } from 'react-native'
@@ -241,12 +241,12 @@ const manageProperty = () => {
           <ButtonComponent text="Submit property" color="lightBackground" background="primary" />
         </View>
       </View>
-      <Tabs.Screen
+      <Stack.Screen
         options={{
           headerLeft: () => (
             <Pressable
               onPress={() => {
-                router.push('/tabs/properties')
+                router.back()
               }}>
               <Icon source={'chevron-left'} size={30} />
             </Pressable>
