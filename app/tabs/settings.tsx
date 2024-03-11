@@ -13,22 +13,30 @@ import UserCard from 'src/components/UserCard'
 const settings = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false} className="flex flex-1 px-2">
-      <UserCard />
-      <View className="flex flex-row justify-between my-2 border border-2 rounded-md py-2">
-        <View className="flex flex-row items-center">
-          <Icon source={'bell'} size={20} />
-          <Text className="text-grayText pl-2" style={typograhpy.buttonText}>
-            Notifications
-          </Text>
-        </View>
-        <View className="flex flex-row items-center">
-          <View className="w-8 h-8 rounded-full mr-2 bg-primary flex items-center ">
-            <Text className="text-whiteText my-auto" style={typograhpy.buttonText}>
-              1
+      <View className="mt-2">
+        <UserCard isUser />
+      </View>
+      <View className="mt-4">
+        <Pressable
+          className="flex flex-row justify-between my-2 border border-2 rounded-md py-2"
+          onPress={() => {
+            router.push('/stacks/notifications')
+          }}>
+          <View className="flex flex-row items-center">
+            <Icon source={'bell'} size={25} />
+            <Text className="text-grayText pl-2" style={typograhpy.buttonText}>
+              Notifications
             </Text>
           </View>
-          <Icon source={'chevron-right'} size={29} />
-        </View>
+          <View className="flex flex-row items-center">
+            <View className="w-8 h-8 rounded-full mr-2 bg-primary flex items-center ">
+              <Text className="text-whiteText my-auto" style={typograhpy.buttonText}>
+                1
+              </Text>
+            </View>
+            <Icon source={'chevron-right'} size={29} />
+          </View>
+        </Pressable>
       </View>
       <Tabs.Screen
         options={{

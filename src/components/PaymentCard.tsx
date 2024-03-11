@@ -57,7 +57,7 @@ const PaymentCard = ({ property, isPaid }: { property: (typeof properties)[0]; i
           )}
         </View>
       </View>
-      {isPaid && <Icon source={'check-circle'} size={20} color={colors.green} />}
+      {isPaid && <Icon source={'check-decagram'} size={30} color={colors.green} />}
     </View>
   )
 }
