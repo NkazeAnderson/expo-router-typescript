@@ -17,7 +17,7 @@ const ConversationCard = ({ partner, lastMessage, time, isOnline }: conversation
         <UserAvatar />
         {isOnline && <View className="w-3 h-3 bg-green rounded-full border-2 border-grayText absolute right-0 bottom-1"></View>}
       </View>
-      <Pressable onPress={() => router.navigate('tabs/messages')} className="flex-grow pl-3 w-[60%]">
+      <Pressable onPress={() => router.navigate('/stacks/messages')} className="flex-grow pl-3 w-[60%]">
         <Text className="capitalize" style={typograhpy.h3}>
           {partner}
         </Text>

@@ -40,7 +40,7 @@ export const properties = [
       company: 'C R Rentals',
       rating: 5
     },
-    amenities: ['pool', 'parking', 'water', 'starlink'],
+    amenities: ['pool', 'parking', 'water', 'wifi'],
     images: ['house.png', 'house1.png'],
     primaryImage: 0,
     address: 'mile 4, Bamenda',
@@ -60,7 +60,7 @@ export const properties = [
     isForSale: false,
     price: 35000,
     postedBy: users[1],
-    amenities: ['pool', 'parking', 'water', 'starlink'],
+    amenities: ['pool', 'generator', 'gate', 'gym'],
     images: ['house.png', 'house1.png'],
     primaryImage: 0,
     address: 'mile 6, Bamenda',
@@ -69,3 +69,4 @@ export const properties = [
     description: 'This is an newly constructed house with some amazing stuffs'
   }
 ]
+export const propertyTypes: propertyTypes[] = ['Apartment', 'Land', 'Business Place', 'Self Content']

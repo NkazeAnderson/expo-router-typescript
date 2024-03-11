@@ -10,7 +10,7 @@ import ButtonComponent from './ButtonComponent'
 
 function LongPropertyCard({ property, isPoster }: { property: (typeof properties)[1]; isPoster?: boolean }) {
   const viewPropertyDetails = () => {
-    router.push(`/tabs/propertyDetails?propertyID=${property.id}`)
+    router.push(`/stacks/propertyDetails?propertyID=${property.id}`)
   }
 
   return (
@@ -41,7 +41,7 @@ function LongPropertyCard({ property, isPoster }: { property: (typeof properties
                 color="whiteText"
                 background="primary"
                 action={() => {
-                  router.push(`/tabs/manageProperty?edit=${property.id}`)
+                  router.push(`/stacks/manageProperty?edit=${property.id}`)
                 }}
               />
             </View>

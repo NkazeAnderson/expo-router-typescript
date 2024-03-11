@@ -34,7 +34,7 @@ const propertiesPage = () => {
         />
       </ScrollView>
       <View className="w-full p-2 pb-4">
-        <ButtonComponent text="Add" icon="plus" color="whiteText" background="primary" action={() => router.push('/tabs/manageProperty')} />
+        <ButtonComponent text="Add" icon="plus" color="whiteText" background="primary" action={() => router.push('/stacks/manageProperty')} />
       </View>
     </View>
   )
