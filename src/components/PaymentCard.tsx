@@ -6,6 +6,7 @@ import estatePlaceholder from '../assets/images/estatePlaceholder.jpg'
 import ButtonComponent from './ButtonComponent'
 import { properties } from 'src/config/constants'
 import millify from 'millify'
+import { router } from 'expo-router'
 const PaymentCard = ({ property, isPaid }: { property: (typeof properties)[0]; isPaid?: boolean }) => {
   return (
     <View className="flex flex-row w-full bg-lightBackground p-2 rounded-lg">
@@ -32,17 +33,31 @@ const PaymentCard = ({ property, isPaid }: { property: (typeof properties)[0]; i
                 <ButtonComponent text="Remove" color={'whiteText'} background="danger" />
               </View>
               <View className="w-[50%]">
-                <ButtonComponent text="Pay" color={'whiteText'} background="primary" />
+                <ButtonComponent
+                  text="Pay"
+                  color={'whiteText'}
+                  background="primary"
+                  action={() => {
+                    router.push('/stacks/completePayment')
+                  }}
+                />
               </View>
             </>
           ) : (
             <View>
-              <ButtonComponent text="Get Receipt" icon="receipt" color={'secondary'} />
+              <ButtonComponent
+                text="Get Receipt"
+                icon="receipt"
+                color={'secondary'}
+                action={() => {
+                  router.push('/stacks/receipt')
+                }}
+              />
             </View>
           )}
         </View>
       </View>
-      {isPaid && <Icon source={'check-circle'} size={20} color={colors.green} />}
+      {isPaid && <Icon source={'check-decagram'} size={30} color={colors.green} />}
     </View>
   )
 }

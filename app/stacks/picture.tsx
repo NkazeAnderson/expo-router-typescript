@@ -1,19 +1,16 @@
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
-import estatePlaceholder from '../../src/assets/images/house1.png'
+import { useLocalSearchParams } from 'expo-router'
+import { domain } from 'utilities/useFetch'
+import PictureComponent from 'src/components/PictureComponent'
 // import estatePlaceholder2 from '../../src/assets/images/house2.png'
 
 const picture = () => {
+  const { url } = useLocalSearchParams<{ url: string }>()
+  console.log(url)
   return (
     <View className="flex flex-1">
-      <View className="absolute w-full h-screen ">
-        <Image source={estatePlaceholder} style={{ width: '100%', height: '100%', objectFit: 'fill', opacity: 0.04 }} />
-      </View>
-      <View className=" absolute w-full h-full my-auto  py-[100px]">
-        <View className="my-auto w-full">
-          <Image source={estatePlaceholder} style={{ width: '100%', objectFit: 'contain' }} />
-        </View>
-      </View>
+      <PictureComponent url={url ? `${domain}${url}` : 'none'} />
     </View>
   )
 }

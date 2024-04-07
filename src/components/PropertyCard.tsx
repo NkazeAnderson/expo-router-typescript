@@ -1,30 +1,38 @@
 import { FlatList, Image, Pressable, Text, View } from 'react-native'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Icon } from 'react-native-paper'
-import estatePlaceholder from '../assets/images/estatePlaceholder.jpg'
-import estatePlaceholder1 from '../assets/images/house1.png'
-import estatePlaceholder2 from '../assets/images/house2.png'
+//import estatePlaceholder from '../assets/images/estatePlaceholder.jpg'
 import playVideo from '../assets/images/icons8-play-video-64.png'
 import { colors, typograhpy } from 'src/config/theme'
-import { properties } from 'src/config/constants'
+import { apartment_Results_Sample } from 'src/config/constants'
 import millify from 'millify'
 import { router } from 'expo-router'
 import { AVPlaybackStatus, ResizeMode, Video } from 'expo-av'
-import { globalStates } from 'app/tabs/home'
+//import { globalStates } from 'app/tabs/home'
+import { domain } from 'utilities/useFetch'
 
-function PropertyCard({ property, withImages }: { property: (typeof properties)[1]; withImages?: boolean }) {
+function PropertyCard({
+  property,
+  withImages,
+  videoSharedRef
+}: {
+  property: typeof apartment_Results_Sample
+  withImages?: boolean
+  videoSharedRef?: React.MutableRefObject<Video | null>
+}) {
   const viewPropertyDetails = () => {
     router.push(`/stacks/propertyDetails?propertyID=${property.id}`)
   }
-  const videoRef: React.MutableRefObject<Video | null> = useRef(null)
+
   const [videoStatus, setVideoStatus] = useState<AVPlaybackStatus>()
 
-  const setVideoState = globalStates((state) => state.setVideoState)
-  useCallback(() => {
-    if (videoRef instanceof Video) {
-      setVideoState(videoRef)
-    }
-  }, [videoRef])
+  //const setVideoState = globalStates((state) => state.setVideoState)
+  // useCallback(() => {
+  //   if (videoSharedRef instanceof Video) {
+  //     setVideoState(videoSharedRef)
+  //   }
+  // }, [videoSharedRef])
+
   return (
     <Pressable
       onPress={!withImages ? viewPropertyDetails : () => {}}
@@ -32,21 +40,26 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
       {withImages ? (
         <View>
           <Video
-            ref={videoRef}
+            ref={videoSharedRef}
             source={{
-              uri: 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+              uri: `${domain}/${property.video_link}`
             }}
             useNativeControls
             resizeMode={ResizeMode.CONTAIN}
             style={{ width: '100%', height: 250 }}
-            posterSource={estatePlaceholder}
             usePoster
             posterStyle={{ objectFit: 'contain', width: '100%', height: '100%' }}
             onPlaybackStatusUpdate={(status) => setVideoStatus(() => status)}
           />
-          {videoStatus?.isLoaded && !videoStatus.isPlaying && (
+          {videoStatus?.isLoaded && !videoStatus.isPlaying && videoSharedRef && (
             <View className={`absolute w-full  h-full `}>
-              <Pressable onPress={() => videoRef.current?.playAsync()} className="my-auto mx-auto">
+              <Pressable
+                onPress={() => {
+                  videoStatus.positionMillis === videoStatus.playableDurationMillis
+                    ? videoSharedRef.current?.replayAsync()
+                    : videoSharedRef.current?.playAsync()
+                }}
+                className="my-auto mx-auto">
                 <Image source={playVideo} />
               </Pressable>
             </View>
@@ -54,7 +67,12 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
         </View>
       ) : (
         <View>
-          <Image className="w-[100%] h-[25vh] rounded-lg" source={estatePlaceholder} />
+          <Image
+            className="w-[100%] h-[25vh] rounded-lg"
+            source={{
+              uri: `${domain}/${property.primary_link}`
+            }}
+          />
         </View>
       )}
 
@@ -62,16 +80,16 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
         <>
           <View className="flex flex-row justify-between items-center px-1">
             <Text className="capitalize" style={typograhpy.h2}>
-              {property.subCategory}
+              {property.category_detail}
             </Text>
             <Text style={typograhpy.regularText}>
-              {property.isForSale ? `FCFA ${millify(property.price)}` : ` FCFA ${millify(property.price)} / mo`}
+              {property.for_sale ? `FCFA ${millify(property.price)}` : ` FCFA ${millify(property.price)} / mo`}
             </Text>
           </View>
           <View className="flex flex-row items-center space-x-2 px-1">
             <Icon source={'map-marker'} size={18} />
             <Text className="capitalize" style={typograhpy.h3}>
-              {property.address}
+              {property.street}
             </Text>
           </View>
         </>
@@ -81,39 +99,39 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
           <View className="mt-3 space-y-1 px-2">
             <View className="flex flex-row justify-between items-center px-1">
               <Text className="capitalize" style={typograhpy.h2}>
-                {property.subCategory}
+                {property.category_detail}
               </Text>
               <Text style={typograhpy.regularText}>
-                {property.isForSale ? `FCFA ${millify(property.price)}` : ` FCFA ${millify(property.price)} / mo`}
+                {property.for_sale ? `FCFA ${millify(property.price)}` : ` FCFA ${millify(property.price)} / mo`}
               </Text>
             </View>
             <View className="flex flex-row items-center space-x-2 px-1">
               <Icon source={'map-marker'} size={18} />
               <Text className="capitalize" style={typograhpy.h3}>
-                {property.address}
+                {property.street}
               </Text>
             </View>
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
-              data={property.images}
-              renderItem={({ item, index }) => {
-                let img = estatePlaceholder1
-                if (item !== 'house.png') {
-                  img = estatePlaceholder2
-                }
-                return (
-                  <Pressable
-                    key={index}
-                    className=" h-[35vh]"
-                    onPress={() => {
-                      videoRef.current?.pauseAsync()
-                      router.push('/stacks/picture')
-                    }}>
-                    <Image className="rounded-lg h-full w-[70vw]" source={img} />
-                  </Pressable>
-                )
-              }}
+              data={property.images_link}
+              renderItem={({ item, index }) => (
+                <Pressable
+                  key={index}
+                  className=" h-[35vh] "
+                  onPress={() => {
+                    videoSharedRef && videoSharedRef.current?.pauseAsync()
+                    router.push(`/stacks/picture?url=${item.url}`)
+                  }}>
+                  <Image
+                    className="rounded-lg h-full w-[70vw]"
+                    source={{
+                      uri: `${domain}${item.url}`
+                    }}
+                    resizeMode="cover"
+                  />
+                </Pressable>
+              )}
               ItemSeparatorComponent={() => {
                 return (
                   <View className="w-4">
@@ -132,10 +150,14 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
                     color={colors.orange}
                   />
                   <Text className="text-grayText" style={typograhpy.lableText}>
-                    {`${
-                      //@ts-expect-error: keys of item
-                      property[item]
-                    } ${item}`}
+                    {item === 'bed'
+                      ? property.bed_rooms
+                      : item === 'sitting'
+                        ? property.sitting_rooms
+                        : item === 'kitchen'
+                          ? property.internal_kitchens
+                          : property.internal_toilets}
+                    {` ${item}`}
                   </Text>
                 </View>
               ))}
@@ -154,10 +176,14 @@ function PropertyCard({ property, withImages }: { property: (typeof properties)[
                   color={colors.orange}
                 />
                 <Text className="text-grayText" style={typograhpy.lableText}>
-                  {`${
-                    //@ts-expect-error: keys of item
-                    property[item]
-                  } ${item}`}
+                  {item === 'bed'
+                    ? property.bed_rooms
+                    : item === 'sitting'
+                      ? property.sitting_rooms
+                      : item === 'kitchen'
+                        ? property.internal_kitchens
+                        : property.internal_toilets}
+                  {` ${item}`}
                 </Text>
               </View>
             )}

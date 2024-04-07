@@ -3,9 +3,9 @@ import userPlaceHolder from '../assets/images/face1.png'
 import React from 'react'
 import { Icon } from 'react-native-paper'
 import { colors, typograhpy } from 'src/config/theme'
-import { users } from 'src/config/constants'
+import { apartment_Results_Sample } from 'src/config/constants'
 
-const AgentCard = ({ agent, description }: { agent: (typeof users)[0]; description: string }) => {
+const AgentCard = ({ agent, description }: { agent: typeof apartment_Results_Sample.posted_by; description: string }) => {
   const ratingArray = []
   for (let index = 0; index < agent.rating; index++) {
     ratingArray.push(index)
@@ -16,10 +16,10 @@ const AgentCard = ({ agent, description }: { agent: (typeof users)[0]; descripti
         <Image className="w-[50px] h-[50px] rounded" source={userPlaceHolder} />
         <View>
           <Text className="text-grayText capitalize" style={typograhpy.h3}>
-            {agent.name}
+            {`${agent.first_name} ${agent.last_name}`}
           </Text>
           <Text className="text-grayText" style={typograhpy.lableText}>
-            Agent - {agent.company}
+            Agent - {'Private'}
           </Text>
         </View>
       </View>

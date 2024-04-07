@@ -1,4 +1,5 @@
-import { Link } from 'expo-router'
+import axios from 'axios'
+import { Link, router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
 import { Image, Keyboard, Text, View } from 'react-native'
@@ -15,6 +16,24 @@ export default function SignupScreen() {
   //   router.replace('/signup')
   // }
   const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [password, setPassword] = useState('')
+
+  const SignUp = () => {
+    const name_split = name.split(' ')
+    const first_name = name_split[0]
+    const last_name = name_split.slice(1).join(' ')
+    axios
+      .post('http://192.168.119.212:8000/api/user/signup', { phone, password, first_name, last_name })
+      .then((result) => {
+        console.log(result.data)
+        router.replace('/login')
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -41,12 +60,12 @@ export default function SignupScreen() {
           <Text className={` text-center  my-5 text-primary`} style={typograhpy.h2}>
             Register
           </Text>
-          <InputComponent placeholder="UserName" icon="account-outline" />
-          <InputComponent placeholder="Email" icon="email" />
-          <InputComponent placeholder="Password" icon="lock" />
+          <InputComponent placeholder="Full Name" icon="account-outline" value={name} setValue={setName} />
+          <InputComponent placeholder="Phone" icon="phone" value={phone} setValue={setPhone} />
+          <InputComponent placeholder="Password" icon="lock" value={password} setValue={setPassword} />
           <View className="my-2">
             <View>
-              <ButtonComponent text="Register" background="primary" color="whiteText" />
+              <ButtonComponent text="Register" background="primary" color="whiteText" action={SignUp} />
             </View>
           </View>
         </View>
