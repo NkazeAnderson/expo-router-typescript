@@ -27,7 +27,12 @@
     },
     "plugins": [
       "expo-router",
-      ["expo-av", { "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone" }],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ],
       [
         "expo-image-picker",
         {
@@ -35,8 +40,18 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
         }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+        }
       ]
     ],
-    "extra": { "router": { "origin": false } }
+    "extra": {
+      "router": {
+        "origin": false
+      }
+    }
   }
 }

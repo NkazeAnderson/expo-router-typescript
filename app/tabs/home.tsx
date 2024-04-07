@@ -1,5 +1,5 @@
 import { View, Text, Image, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tabs } from 'expo-router'
 import { typograhpy } from 'src/config/theme'
 import profilePlaceholder from '../../src/assets/images/profilePlaceHolder.png'
@@ -9,19 +9,18 @@ import SectionHeading from 'src/components/SectionHeading'
 import PropertyCard from 'src/components/PropertyCard'
 import { ScrollView } from 'react-native'
 import LongPropertyCard from 'src/components/LongPropertyCard'
-import { properties, propertyTypes, users } from 'src/config/constants'
+import { apartment_Results_Sample, propertyTypes } from 'src/config/constants'
 import Filter from 'src/components/Filter'
 import FilterIconButtons from 'src/components/FilterIconButtons'
 import { FlatList } from 'react-native'
-import { create } from 'zustand'
-import { Video } from 'expo-av'
 import { Badge } from 'react-native-paper'
 import { router } from 'expo-router'
-const user = users[0]
-interface GlobalStates {
-  videoState: Video | null
-  setVideoState: (_state: Video | null) => void
-}
+import { get, refreshToken } from 'utilities/useFetch'
+import Toast from 'react-native-root-toast'
+import { globalState } from 'app/_layout'
+import Loading from 'src/components/Loading'
+
+type Apartment = (typeof apartment_Results_Sample)[]
 function getTimePeriod(time: Date) {
   const hours = time.getHours()
   const minutes = time.getHours()
@@ -36,13 +35,14 @@ function getTimePeriod(time: Date) {
   }
 }
 
-export const globalStates = create<GlobalStates>()((set) => ({
-  videoState: null,
-  setVideoState: (_state) => set(() => ({ videoState: _state }))
-}))
 const home = () => {
   const [toggleFilter, setToggleFilter] = useState(false)
   const [refresh, setRefresh] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [apartments, setApartments] = useState<undefined | Apartment>(undefined)
+  const user = globalState((state) => state.userInfo)
+  const setUser = globalState((state) => state.setUserInfo)
+
   const [filters, setFilters] = useState<Filters>({
     propertyType: 'Apartment',
     price: 15000,
@@ -53,7 +53,42 @@ const home = () => {
     kitchen: 1
   })
 
+  const getApartments = async () => {
+    try {
+      const userInfo = await get('/user/myinfo/')
+      setUser(userInfo.data.results[0])
+      const apartmentData = await get('/property/apartment/')
+      setLoading(false)
+      setApartments(apartmentData.data.results)
+    } catch (error) {
+      //
+      refreshToken()
+        .then(() => {
+          setRefresh(!refresh)
+        })
+        .catch(() => {
+          router.replace('/login')
+          Toast.show('You are not logged in.', {
+            duration: Toast.durations.LONG,
+            backgroundColor: '#4a43eb'
+          })
+        })
+
+      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+      // setTimeout(function hideToast() {
+      //   Toast.hide(toast)
+      // }, 500)
+    }
+  }
+
+  useEffect(() => {
+    getApartments()
+  }, [refresh])
+
   const time = new Date()
+  if (loading) {
+    return <Loading />
+  }
   return (
     <View className="flex flex-1 relative">
       <ScrollView showsVerticalScrollIndicator={false} className="flex flex-1 px-4 ">
@@ -102,17 +137,20 @@ const home = () => {
           }}
           contentContainerStyle={{ marginTop: 10 }}
         />
+        {apartments && (
+          <>
+            <View className="mt-5">
+              <SectionHeading title="Recommended" link="See all" />
+              <PropertyCard property={apartments[1]} />
+              <PropertyCard property={apartments[0]} />
+            </View>
 
-        <View className="mt-5">
-          <SectionHeading title="Recommended" link="See all" />
-          <PropertyCard property={properties[0]} />
-          <PropertyCard property={properties[1]} />
-        </View>
-
-        <View>
-          <SectionHeading title="Featured" />
-          <LongPropertyCard property={properties[1]} />
-        </View>
+            <View>
+              <SectionHeading title="Featured" />
+              <LongPropertyCard property={apartments[0]} />
+            </View>
+          </>
+        )}
       </ScrollView>
       {toggleFilter && (
         <View className="flex flex-1 absolute w-screen h-screen">
@@ -146,7 +184,7 @@ const home = () => {
               </Text>
               <Text className="capitalize" style={typograhpy.h2}>
                 {' '}
-                {user.name}
+                {user?.first_name}
               </Text>
             </View>
           ),
