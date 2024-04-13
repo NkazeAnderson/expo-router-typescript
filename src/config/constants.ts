@@ -30,7 +30,7 @@ export const apartment_Results_Sample = {
     first_name: 'Nkaze Anderson',
     last_name: 'Tendzong',
     id: 1,
-    profile_picture: null,
+    profile_picture: '',
     rating: 0
   },
   for_sale: false,

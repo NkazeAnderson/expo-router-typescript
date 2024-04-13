@@ -128,7 +128,16 @@ const propertDetails = () => {
           ),
           title: 'Property Details',
           headerTitleStyle: typograhpy.h3,
-          headerRight: () => <IconButton icon={user?.id === apartment.posted_by.id ? 'pen' : 'book-variant'} iconColor={colors.primary} size={30} />
+          headerRight: () => (
+            <IconButton
+              icon={user?.id === apartment.posted_by.id ? 'pen' : 'book-variant'}
+              iconColor={colors.primary}
+              size={30}
+              onPress={() => {
+                user?.id === apartment.posted_by.id && router.push(`/stacks/manageProperty?edit=${apartment.id}`)
+              }}
+            />
+          )
         }}
       />
     </ScrollView>

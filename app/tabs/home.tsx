@@ -56,10 +56,10 @@ const home = () => {
   const getApartments = async () => {
     try {
       const userInfo = await get('/user/myinfo/')
-      setUser(userInfo.data.results[0])
+      setUser(userInfo.data[0])
       const apartmentData = await get('/property/apartment/')
-      setLoading(false)
       setApartments(apartmentData.data.results)
+      setLoading(false)
     } catch (error) {
       //
       refreshToken()
@@ -82,7 +82,7 @@ const home = () => {
   }
 
   useEffect(() => {
-    getApartments()
+    !apartments && getApartments()
   }, [refresh])
 
   const time = new Date()
@@ -141,8 +141,9 @@ const home = () => {
           <>
             <View className="mt-5">
               <SectionHeading title="Recommended" link="See all" />
-              <PropertyCard property={apartments[1]} />
-              <PropertyCard property={apartments[0]} />
+              {apartments.map((apartment, index) => (
+                <PropertyCard key={index} property={apartment} />
+              ))}
             </View>
 
             <View>
@@ -155,7 +156,7 @@ const home = () => {
       {toggleFilter && (
         <View className="flex flex-1 absolute w-screen h-screen">
           <Pressable onPress={() => setToggleFilter(!toggleFilter)} className="flex-grow bg-[#000000] " style={{ opacity: 0.6 }}></Pressable>
-          <View className="flex absolute h-[55vh] w-full bottom-[100px] bg-lightBackground rounded-t-[50px] px-3" style={{ opacity: 1 }}>
+          <View className="flex absolute h-[75vh] w-full bottom-[100px] bg-lightBackground rounded-t-[50px] px-3" style={{ opacity: 1 }}>
             <View className="p-4">
               <Text className="text-center text-primary" style={typograhpy.h3}>
                 Filter
@@ -170,7 +171,17 @@ const home = () => {
               />
             </ScrollView>
             <View className="p-2">
-              <ButtonComponent action={() => setToggleFilter(!toggleFilter)} text="Find" color="whiteText" background="primary" />
+              <ButtonComponent
+                action={() => {
+                  setToggleFilter(!toggleFilter)
+                  get(`/property/apartment/?location=${filters.location}`).then((res) => {
+                    setApartments(res.data.results)
+                  })
+                }}
+                text="Find"
+                color="whiteText"
+                background="primary"
+              />
             </View>
           </View>
         </View>

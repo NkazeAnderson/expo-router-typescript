@@ -114,7 +114,7 @@ function PropertyCard({
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
-              data={property.images_link}
+              data={[{ url: `${property.primary_link}` }, ...property.images_link]}
               renderItem={({ item, index }) => (
                 <Pressable
                   key={index}
@@ -126,7 +126,7 @@ function PropertyCard({
                   <Image
                     className="rounded-lg h-full w-[70vw]"
                     source={{
-                      uri: `${domain}${item.url}`
+                      uri: `${domain}/${item.url}`
                     }}
                     resizeMode="cover"
                   />

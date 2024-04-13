@@ -3,8 +3,11 @@ import React from 'react'
 import UserAvatar from './UserAvatar'
 import { colors, typograhpy } from 'src/config/theme'
 import { IconButton } from 'react-native-paper'
+import { apartment_Results_Sample } from 'src/config/constants'
+import { globalState } from 'app/_layout'
 
-const UserCard = ({ isUser }: { isUser?: boolean }) => {
+const UserCard = ({ userData, isUser }: { userData?: typeof apartment_Results_Sample.posted_by; isUser?: boolean }) => {
+  const user = globalState((state) => state.userInfo)
   return (
     <View className="w-full">
       <View className="flex flex-row">
@@ -14,10 +17,10 @@ const UserCard = ({ isUser }: { isUser?: boolean }) => {
         </View>
         <View className="ml-2">
           <Text className="text-grayText" style={typograhpy.h3}>
-            Bless Ndi
+            {isUser ? `${user?.first_name}` : `${userData?.first_name} `}
           </Text>
           <Text className="text-grayText" style={typograhpy.lableText}>
-            {isUser ? '683 478 098' : 'online'}
+            {'online'}
           </Text>
         </View>
         <View className="ml-auto">

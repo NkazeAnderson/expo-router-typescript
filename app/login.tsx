@@ -20,15 +20,17 @@ export default function LoginScreen() {
   const setUser = globalState((state) => state.setUserInfo)
   const logIn = async () => {
     try {
-      const results = await post('/user/token/', { phone: '683403750', password: 'badoo65413' })
-      //await AsyncStorage.setItem('auth_token', results.data['access'])
-      await AsyncStorage.setItem('auth_token1', results.data['access'])
+      const results = await post('/user/token/', { phone, password })
+      // @ts-expect-error data-exists
+      await AsyncStorage.setItem('auth_token', results.data['access'])
+      // @ts-expect-error data-exists
       await AsyncStorage.setItem('refresh_token', results.data['refresh'])
       const userData = await get('/user/myinfo/')
-      await AsyncStorage.setItem('user', JSON.stringify(userData.data.results[0]))
-      //await AsyncStorage.setItem('auth_token', results.data['access'])
-      setUser(userData.data.results[0])
-      Toast.show(`Welcome ${userData.data.results[0].first_name}`, {
+      console.log(userData.data)
+
+      await AsyncStorage.setItem('user', JSON.stringify(userData.data[0]))
+      setUser(userData.data[0])
+      Toast.show(`Welcome ${userData.data[0].first_name}`, {
         duration: Toast.durations.SHORT,
         backgroundColor: colors.primary,
         position: Toast.positions.TOP
@@ -60,7 +62,7 @@ export default function LoginScreen() {
             Login
           </Text>
 
-          <InputComponent placeholder="Phone" icon="phone" value={phone} setValue={setPhone} />
+          <InputComponent placeholder="Phone" icon="phone" value={phone} setValue={setPhone} keyboard="phone-pad" />
           <InputComponent placeholder="Password" icon="lock" value={password} setValue={setPassword} />
           <View className="flex flex-row justify-between items-center my-2">
             <View>
