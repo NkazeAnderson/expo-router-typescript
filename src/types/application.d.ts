@@ -1,5 +1,5 @@
 type propertyTypes = 'Apartment' | 'Land' | 'Business Place' | 'Self Content'
-type Filters = { location: string; price: number } & (
+type Filters = (
   | {
       propertyType: Extract<propertyTypes, 'Apartment'>
       rooms: number
@@ -14,4 +14,4 @@ type Filters = { location: string; price: number } & (
       propertyType: Extract<propertyTypes, 'Business Place' | 'Self Content'>
       isMonthly: boolean
     }
-)
+) & { location: string; price: number }

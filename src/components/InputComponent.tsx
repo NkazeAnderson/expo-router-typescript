@@ -9,7 +9,9 @@ const InputComponent = ({
   value = '',
   setValue = () => {},
   lines,
-  keyboard
+  keyboard,
+  onSubmit,
+  onSubmitType
 }: {
   placeholder: string
   icon: string
@@ -17,6 +19,8 @@ const InputComponent = ({
   setValue?: (text: string) => void
   lines?: number
   keyboard?: KeyboardTypeOptions
+  onSubmit?: () => void
+  onSubmitType?: string
 }) => {
   return (
     <View className="py-2 shadow shadow-lg">
@@ -27,13 +31,12 @@ const InputComponent = ({
         outlineStyle={{ borderRadius: 15, borderColor: 'transparent' }}
         style={{ backgroundColor: 'white' }}
         value={value}
+        returnKeyType={onSubmitType && onSubmitType === 'search' ? 'search' : 'default'}
         keyboardType={keyboard ? keyboard : 'default'}
         multiline={lines ? true : false}
         numberOfLines={lines ? lines : 4}
         onChangeText={(text) => setValue(text)}
-        onSubmitEditing={() => {
-          setValue('')
-        }}
+        onSubmitEditing={() => onSubmitType && onSubmitType === 'search' && onSubmit && onSubmit()}
       />
     </View>
   )

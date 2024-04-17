@@ -121,3 +121,13 @@ export const user_sample = {
   profile_picture: '',
   rating: 0
 }
+
+export const defaultFilters = {
+  propertyType: 'Apartment',
+  price: 15000,
+  isMonthly: true,
+  location: '',
+  rooms: 1,
+  toilet: 1,
+  kitchen: 1
+}
