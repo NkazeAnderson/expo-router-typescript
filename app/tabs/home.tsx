@@ -282,7 +282,10 @@ const home = () => {
                 router.push('/tabs/settings')
               }}>
               <Badge style={{ right: -5, zIndex: 5, position: 'absolute' }}>3</Badge>
-              <Image className="w-[50px] h-[50px] rounded-full object-cover" source={profilePlaceholder} />
+              <Image
+                className="w-[50px] h-[50px] rounded-full object-cover"
+                source={user && user.profile_picture !== null ? { uri: user.profile_picture } : profilePlaceholder}
+              />
             </Pressable>
           )
         }}

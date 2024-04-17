@@ -114,7 +114,7 @@ function PropertyCard({
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
-              data={[{ url: `${property.primary_link}` }, ...property.images_link]}
+              data={[{ url: `/${property.primary_link}` }, ...property.images_link]}
               renderItem={({ item, index }) => (
                 <Pressable
                   key={index}
