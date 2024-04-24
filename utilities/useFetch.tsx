@@ -2,8 +2,8 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 //import { uploadAsync } from 'expo-file-system'
 
-const backend = 'http://192.168.141.212:8000/api'
-export const domain = 'http://192.168.141.212:8000'
+const backend = 'http://192.168.122.212:8000/api'
+export const domain = 'http://192.168.122.212:8000'
 
 export async function get(path: string) {
   const token = await AsyncStorage.getItem('auth_token')

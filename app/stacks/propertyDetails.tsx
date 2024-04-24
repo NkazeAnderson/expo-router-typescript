@@ -72,7 +72,7 @@ const propertDetails = () => {
         <View className="space-y-2 mb-3">
           {
             // eslint-disable-next-line no-constant-condition
-            user?.id === apartment.posted_by.id && false ? (
+            user?.id === apartment.posted_by.id && apartment ? (
               <View>
                 <ButtonComponent
                   text="Edit"
@@ -90,7 +90,10 @@ const propertDetails = () => {
                     background="primary"
                     action={() => {
                       videoSharedRef.current?.pauseAsync()
-                      router.push(`/stacks/messages?conversationId=1&propertyID=${propertyID}`)
+                      const othermember = JSON.stringify(apartment.posted_by)
+                      apartment.chatId !== null
+                        ? router.push(`/stacks/messages?chatId=${apartment.chatId}&otherMember=${othermember}`)
+                        : router.push(`/stacks/messages?otherMember=${othermember}`)
                     }}
                   />
                 </View>

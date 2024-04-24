@@ -34,7 +34,7 @@ const InputComponent = ({
         returnKeyType={onSubmitType && onSubmitType === 'search' ? 'search' : 'default'}
         keyboardType={keyboard ? keyboard : 'default'}
         multiline={lines ? true : false}
-        numberOfLines={lines ? lines : 4}
+        numberOfLines={lines ? 2 : 4}
         onChangeText={(text) => setValue(text)}
         onSubmitEditing={() => onSubmitType && onSubmitType === 'search' && onSubmit && onSubmit()}
       />

@@ -8,6 +8,7 @@ import { Checkbox, Icon, IconButton, RadioButton } from 'react-native-paper'
 import InputComponent from 'src/components/InputComponent'
 import { View } from 'react-native'
 import ButtonComponent from 'src/components/ButtonComponent'
+import { mediaPicker } from 'utilities/useLibraryImage'
 import * as ImagePicker from 'expo-image-picker'
 import { Image } from 'react-native'
 import { Video, ResizeMode } from 'expo-av'
@@ -76,12 +77,7 @@ const manageProperty = () => {
 
   const pickMedia = async (isVideo?: boolean) => {
     // No permissions request is necessary for launching the image library
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: isVideo ? ImagePicker.MediaTypeOptions.Videos : ImagePicker.MediaTypeOptions.Images,
-      aspect: [4, 3],
-      quality: 1,
-      allowsMultipleSelection: !isVideo
-    })
+    const result = await mediaPicker(isVideo)
 
     if (!result.canceled) {
       if (!isVideo) {

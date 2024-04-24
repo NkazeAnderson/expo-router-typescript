@@ -9,11 +9,18 @@ import { router } from 'expo-router'
 
 const UserCard = ({ userData, isUser }: { userData?: typeof apartment_Results_Sample.posted_by; isUser?: boolean }) => {
   const user = globalState((state) => state.userInfo)
+  let url = ''
+  if (!isUser && userData) {
+    url = userData.profile_picture
+  }
+  if (user && isUser) {
+    url = user.profile_picture
+  }
   return (
     <View className="w-full">
       <View className="flex flex-row">
         <View className="relative">
-          <UserAvatar url={user ? user.profile_picture : null} />
+          <UserAvatar url={url} />
           {!isUser && <View className="w-3 h-3 bg-green rounded-full border-2 border-grayText absolute right-0 bottom-3"></View>}
         </View>
         <View className="ml-2">

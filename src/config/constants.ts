@@ -34,6 +34,7 @@ export const apartment_Results_Sample = {
     rating: 0
   },
   for_sale: false,
+  chatId: 9,
   is_interested: false,
   amenities_details: ['water'],
   category_detail: 'Apartment',
@@ -83,6 +84,7 @@ export const properties = [
     },
     amenities_details: ['pool', 'parking', 'water', 'wifi'],
     images: ['house.png', 'house1.png'],
+    chatId: 9,
     primary_link: '0',
     street: 'mile 4, Bamenda',
     interested: [0],
@@ -98,6 +100,7 @@ export const properties = [
     name: 'Panthera Leo',
     category: 'house',
     subCategory: 'Studio',
+    chatId: 9,
     isForSale: false,
     price: 35000,
     postedBy: users[1],

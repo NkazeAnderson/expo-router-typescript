@@ -37,7 +37,7 @@ const payments = () => {
       <BalanceCard />
       <View className="mt-2">
         <SectionHeading title="Properties Pending Payments" />
-        {properties ? (
+        {properties && properties.length > 0 ? (
           properties.map((property) => (
             <PaymentCard
               key={property.id}
@@ -55,7 +55,7 @@ const payments = () => {
       </View>
       <View className="mt-2">
         <SectionHeading title="Processed Payments" />
-        {properties && <PaymentCard property={properties[0]} isPaid />}
+        {properties && properties.length > 0 && <PaymentCard property={properties[0]} isPaid />}
       </View>
       <Tabs.Screen
         options={{
