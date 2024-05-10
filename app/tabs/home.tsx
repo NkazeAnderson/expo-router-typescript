@@ -1,5 +1,5 @@
 import { View, Text, Image, Pressable } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Tabs } from 'expo-router'
 import { typograhpy } from 'src/config/theme'
 import profilePlaceholder from '../../src/assets/images/profilePlaceHolder.png'
@@ -9,7 +9,7 @@ import SectionHeading from 'src/components/SectionHeading'
 import PropertyCard from 'src/components/PropertyCard'
 import { ScrollView } from 'react-native'
 import LongPropertyCard from 'src/components/LongPropertyCard'
-import { apartment_Results_Sample, propertyTypes } from 'src/config/constants'
+import { apartment_Results_Sample, defaultFilters, propertyTypes } from 'src/config/constants'
 import Filter from 'src/components/Filter'
 import FilterIconButtons from 'src/components/FilterIconButtons'
 import { FlatList } from 'react-native'
@@ -42,24 +42,57 @@ const home = () => {
   const [apartments, setApartments] = useState<undefined | Apartment>(undefined)
   const user = globalState((state) => state.userInfo)
   const setUser = globalState((state) => state.setUserInfo)
+  const changedFilters = useRef<string[]>([])
+  // @ts-expect-error is valid
+  const [filters, setFilters] = useState<Filters>({ ...defaultFilters })
 
-  const [filters, setFilters] = useState<Filters>({
-    propertyType: 'Apartment',
-    price: 15000,
-    isMonthly: true,
-    location: 'Bamenda',
-    rooms: 1,
-    toilet: 1,
-    kitchen: 1
-  })
-
-  const getApartments = async () => {
+  const getApartments = async (withFilter: boolean) => {
     try {
-      const userInfo = await get('/user/myinfo/')
-      setUser(userInfo.data.results[0])
-      const apartmentData = await get('/property/apartment/')
-      setLoading(false)
+      if (!user) {
+        const userInfo = await get('/user/myinfo/')
+        setUser(userInfo.data[0])
+      }
+
+      let url = '/property/apartment/'
+      if (withFilter) {
+        const f = changedFilters.current
+        changedFilters.current = []
+        url = url + '?'
+        if (filters.location !== '') {
+          url = url + `location=${filters.location}&`
+        }
+        f.forEach((value) => {
+          console.log(value)
+          console.log(filters.propertyType)
+
+          switch (value) {
+            case 'price':
+              url = url + `price=${filters.price}&`
+              break
+            case 'rooms':
+              if (filters.propertyType === 'Apartment') {
+                url = url + `bed=${filters.rooms}&`
+              }
+              break
+            case 'kitchen':
+              if (filters.propertyType === 'Apartment') {
+                url = url + `kitchen=${filters.kitchen}&`
+              }
+              break
+            case 'toilet':
+              if (filters.propertyType === 'Apartment') {
+                url = url + `toilet=${filters.toilet}&`
+              }
+              break
+
+            default:
+              break
+          }
+        })
+      }
+      const apartmentData = await get(url)
       setApartments(apartmentData.data.results)
+      setLoading(false)
     } catch (error) {
       //
       refreshToken()
@@ -82,7 +115,7 @@ const home = () => {
   }
 
   useEffect(() => {
-    getApartments()
+    !apartments && getApartments(false)
   }, [refresh])
 
   const time = new Date()
@@ -97,11 +130,21 @@ const home = () => {
             <InputComponent
               placeholder="Search"
               icon="home-search-outline"
+              onSubmit={() => {
+                getApartments(true)
+              }}
+              onSubmitType="search"
               value={filters.location}
               setValue={(value) => {
                 filters.location = value
                 setFilters(filters)
                 setRefresh(!refresh)
+                if (!changedFilters.current.some((value) => value === 'location')) {
+                  const f = changedFilters.current
+                  f.push('location')
+                  changedFilters.current = f
+                }
+
                 //setToggleFilter(!toggleFilter)
               }}
             />
@@ -137,12 +180,13 @@ const home = () => {
           }}
           contentContainerStyle={{ marginTop: 10 }}
         />
-        {apartments && (
+        {apartments && apartments.length > 0 ? (
           <>
             <View className="mt-5">
               <SectionHeading title="Recommended" link="See all" />
-              <PropertyCard property={apartments[1]} />
-              <PropertyCard property={apartments[0]} />
+              {apartments.map((apartment, index) => (
+                <PropertyCard key={index} property={apartment} />
+              ))}
             </View>
 
             <View>
@@ -150,12 +194,16 @@ const home = () => {
               <LongPropertyCard property={apartments[0]} />
             </View>
           </>
+        ) : (
+          <View>
+            <Text>Sorry.... No properties in this area</Text>
+          </View>
         )}
       </ScrollView>
       {toggleFilter && (
         <View className="flex flex-1 absolute w-screen h-screen">
           <Pressable onPress={() => setToggleFilter(!toggleFilter)} className="flex-grow bg-[#000000] " style={{ opacity: 0.6 }}></Pressable>
-          <View className="flex absolute h-[55vh] w-full bottom-[100px] bg-lightBackground rounded-t-[50px] px-3" style={{ opacity: 1 }}>
+          <View className="flex absolute h-[75vh] w-full bottom-[100px] bg-lightBackground rounded-t-[50px] px-3" style={{ opacity: 1 }}>
             <View className="p-4">
               <Text className="text-center text-primary" style={typograhpy.h3}>
                 Filter
@@ -165,12 +213,50 @@ const home = () => {
               <Filter
                 filters={filters}
                 setFilters={(filter) => {
+                  if (!changedFilters.current.some((value) => value === 'location') && filter.location !== defaultFilters.location) {
+                    const f = changedFilters.current
+                    f.push('location')
+                    changedFilters.current = f
+                  }
+
+                  if (!changedFilters.current.some((value) => value === 'price') && filter.price !== defaultFilters.price) {
+                    const f = changedFilters.current
+                    f.push('price')
+                    changedFilters.current = f
+                  }
+                  if (filter.propertyType === 'Apartment') {
+                    if (!changedFilters.current.some((value) => value === 'rooms') && filter.rooms !== defaultFilters.rooms) {
+                      const f = changedFilters.current
+                      f.push('rooms')
+                      changedFilters.current = f
+                    }
+
+                    if (!changedFilters.current.some((value) => value === 'kitchen') && filter.kitchen !== defaultFilters.kitchen) {
+                      const f = changedFilters.current
+                      f.push('kitchen')
+                      changedFilters.current = f
+                    }
+
+                    if (!changedFilters.current.some((value) => value === 'toilet') && filter.toilet !== defaultFilters.toilet) {
+                      const f = changedFilters.current
+                      f.push('toilet')
+                      changedFilters.current = f
+                    }
+                  }
                   setFilters(filter)
                 }}
               />
             </ScrollView>
             <View className="p-2">
-              <ButtonComponent action={() => setToggleFilter(!toggleFilter)} text="Find" color="whiteText" background="primary" />
+              <ButtonComponent
+                action={() => {
+                  setToggleFilter(!toggleFilter)
+                  getApartments(true)
+                }}
+                text="Find"
+                color="whiteText"
+                background="primary"
+              />
             </View>
           </View>
         </View>
@@ -196,7 +282,10 @@ const home = () => {
                 router.push('/tabs/settings')
               }}>
               <Badge style={{ right: -5, zIndex: 5, position: 'absolute' }}>3</Badge>
-              <Image className="w-[50px] h-[50px] rounded-full object-cover" source={profilePlaceholder} />
+              <Image
+                className="w-[50px] h-[50px] rounded-full object-cover"
+                source={user && user.profile_picture !== null ? { uri: user.profile_picture } : profilePlaceholder}
+              />
             </Pressable>
           )
         }}

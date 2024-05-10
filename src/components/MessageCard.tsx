@@ -1,23 +1,46 @@
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import React from 'react'
 import UserAvatar from './UserAvatar'
-import { typograhpy } from 'src/config/theme'
+import { colors, typograhpy } from 'src/config/theme'
+import { useTimeAgo } from 'react-time-ago'
+import { Icon } from 'react-native-paper'
 
-const MessageCard = ({ isSender = false }: { isSender?: boolean }) => {
+const MessageCard = ({
+  message,
+  memberPic,
+  isSender,
+  isPhoto,
+  time,
+  read
+}: {
+  message: string
+  memberPic?: string
+  isSender?: boolean
+  isPhoto: boolean
+  time: string
+  read: boolean
+}) => {
+  const date = new Date(time)
+  const timeAgo = useTimeAgo({ date: date, locale: 'en-US' })
   return (
     <View className="w-full py-2">
-      <View className={`${isSender ? 'ml-auto w-[80%]' : 'w-[70%]'} flex flex-row `}>
-        {!isSender && <UserAvatar />}
+      <View className={`flex w-full flex-row ${isSender ? 'justify-end' : ''}  `}>
+        {!isSender && <UserAvatar url={memberPic ? memberPic : null} />}
         <View className="ml-2 ">
-          <View className={`p-2 ${isSender ? 'bg-primary' : 'bg-lightBackground'} rounded-lg`}>
-            <Text className={`${isSender ? 'text-whiteText' : ''} `} style={typograhpy.messageText}>
-              Yoo brother i need this house asap where are you
-            </Text>
+          <View className={` p-2 ${isSender ? 'bg-primary ml-auto ' : 'bg-lightBackground max-w-[80%]'} rounded-lg`}>
+            {!isPhoto ? (
+              <Text className={`${isSender ? 'text-whiteText' : ''} `} style={typograhpy.messageText}>
+                {message}
+              </Text>
+            ) : (
+              <Image className="w-[250px] h-[250px] object-contain" source={{ uri: message }} />
+            )}
           </View>
-          <View className="w-full">
-            <Text className="text-right" style={{ ...typograhpy.lableText }}>
-              11:00 am
+          <View className={`flex w-content items-center flex-row ${isSender ? 'justify-end' : ''}  `}>
+            <Text className="text-right mx-2" style={{ ...typograhpy.lableText }}>
+              {timeAgo.formattedDate}
             </Text>
+            {read ? <Icon source={'check-underline'} size={20} color={colors.primary} /> : <Icon source={'check-underline'} size={12} />}
           </View>
         </View>
       </View>

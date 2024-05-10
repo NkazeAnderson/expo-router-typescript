@@ -30,10 +30,11 @@ export const apartment_Results_Sample = {
     first_name: 'Nkaze Anderson',
     last_name: 'Tendzong',
     id: 1,
-    profile_picture: null,
+    profile_picture: '',
     rating: 0
   },
   for_sale: false,
+  chatId: 9,
   is_interested: false,
   amenities_details: ['water'],
   category_detail: 'Apartment',
@@ -83,6 +84,7 @@ export const properties = [
     },
     amenities_details: ['pool', 'parking', 'water', 'wifi'],
     images: ['house.png', 'house1.png'],
+    chatId: 9,
     primary_link: '0',
     street: 'mile 4, Bamenda',
     interested: [0],
@@ -98,6 +100,7 @@ export const properties = [
     name: 'Panthera Leo',
     category: 'house',
     subCategory: 'Studio',
+    chatId: 9,
     isForSale: false,
     price: 35000,
     postedBy: users[1],
@@ -120,4 +123,14 @@ export const user_sample = {
   id: 1,
   profile_picture: '',
   rating: 0
+}
+
+export const defaultFilters = {
+  propertyType: 'Apartment',
+  price: 15000,
+  isMonthly: true,
+  location: '',
+  rooms: 1,
+  toilet: 1,
+  kitchen: 1
 }

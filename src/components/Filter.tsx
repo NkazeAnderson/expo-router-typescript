@@ -10,9 +10,9 @@ import millify from 'millify'
 
 const Filter = ({ filters, setFilters }: { filters: Filters; setFilters: (filter: Filters) => void }) => {
   const [price, setPrice] = useState(filters.price)
-  const [bed, setBed] = useState(1)
-  const [kitchen, setKitchen] = useState(1)
-  const [bath, setBath] = useState(1)
+  const [bed, setBed] = useState(filters.propertyType === 'Apartment' ? filters.rooms : 1)
+  const [kitchen, setKitchen] = useState(filters.propertyType === 'Apartment' ? filters.kitchen : 1)
+  const [bath, setBath] = useState(filters.propertyType === 'Apartment' ? filters.rooms : 1)
   const [propertyType, setPropertyType] = useState(filters.propertyType)
   const [location, setLocation] = useState(filters.location)
 
@@ -44,7 +44,7 @@ const Filter = ({ filters, setFilters }: { filters: Filters; setFilters: (filter
         <Text style={typograhpy.h3}>Located in:</Text>
 
         <InputComponent
-          placeholder={location}
+          placeholder="Douala"
           icon="google-maps"
           value={location}
           setValue={(value: string) => {

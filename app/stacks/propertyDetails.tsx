@@ -15,6 +15,7 @@ import { get } from 'utilities/useFetch'
 import { Video } from 'expo-av'
 import Loading from 'src/components/Loading'
 import { globalState } from 'app/_layout'
+import Toast from 'react-native-root-toast'
 
 const propertDetails = () => {
   const user = globalState((state) => state.userInfo)
@@ -27,8 +28,8 @@ const propertDetails = () => {
     !apartment && getApartments()
     apartment &&
       get(`/user/${apartment?.posted_by.id}/properties/`)
-        .then((result: { data: { results: (typeof apartment_Results_Sample)[] } }) => {
-          setOtherProperties(result.data.results)
+        .then((result: { data: (typeof apartment_Results_Sample)[] }) => {
+          setOtherProperties(result.data.splice(0, 3))
         })
         .catch((e) => {
           console.log(e)
@@ -69,41 +70,55 @@ const propertDetails = () => {
           <AgentCard agent={apartment.posted_by} description={apartment.description} />
         </View>
         <View className="space-y-2 mb-3">
-          {user?.id === apartment.posted_by.id ? (
-            <View>
-              <ButtonComponent
-                text="Edit"
-                color="whiteText"
-                background="primary"
-                action={() => router.push(`/stacks/manageProperty?edit=${apartment.id}`)}
-              />
-            </View>
-          ) : (
-            <>
+          {
+            // eslint-disable-next-line no-constant-condition
+            user?.id === apartment.posted_by.id && apartment ? (
               <View>
                 <ButtonComponent
-                  text="Message Agent"
+                  text="Edit"
                   color="whiteText"
                   background="primary"
-                  action={() => {
-                    videoSharedRef.current?.pauseAsync()
-                    router.push(`/stacks/messages?conversationId=1&propertyID=${propertyID}`)
-                  }}
+                  action={() => router.push(`/stacks/manageProperty?edit=${apartment.id}`)}
                 />
               </View>
-              <View>
-                <ButtonComponent
-                  text="Save and Pay"
-                  color="whiteText"
-                  background="secondary"
-                  action={() => {
-                    videoSharedRef.current?.pauseAsync()
-                    router.push('/tabs/payments')
-                  }}
-                />
-              </View>
-            </>
-          )}
+            ) : (
+              <>
+                <View>
+                  <ButtonComponent
+                    text="Message Agent"
+                    color="whiteText"
+                    background="primary"
+                    action={() => {
+                      videoSharedRef.current?.pauseAsync()
+                      const othermember = JSON.stringify(apartment.posted_by)
+                      apartment.chatId !== null
+                        ? router.push(`/stacks/messages?chatId=${apartment.chatId}&otherMember=${othermember}`)
+                        : router.push(`/stacks/messages?otherMember=${othermember}`)
+                    }}
+                  />
+                </View>
+                <View>
+                  <ButtonComponent
+                    text={'Save and Pay'}
+                    color="whiteText"
+                    background="secondary"
+                    action={() => {
+                      videoSharedRef.current?.pauseAsync()
+                      apartment.is_interested
+                        ? router.push('/tabs/payments')
+                        : get(`/property/apartment/${apartment.id}/interested/`).then((res) => {
+                            const { action } = res.data
+                            if (action === 'added') {
+                              Toast.show('Saved')
+                              router.push('/tabs/payments')
+                            }
+                          })
+                    }}
+                  />
+                </View>
+              </>
+            )
+          }
         </View>
       </View>
 
@@ -128,7 +143,16 @@ const propertDetails = () => {
           ),
           title: 'Property Details',
           headerTitleStyle: typograhpy.h3,
-          headerRight: () => <IconButton icon={user?.id === apartment.posted_by.id ? 'pen' : 'book-variant'} iconColor={colors.primary} size={30} />
+          headerRight: () => (
+            <IconButton
+              icon={user?.id === apartment.posted_by.id ? 'pen' : 'book-variant'}
+              iconColor={colors.primary}
+              size={30}
+              onPress={() => {
+                user?.id === apartment.posted_by.id && router.push(`/stacks/manageProperty?edit=${apartment.id}`)
+              }}
+            />
+          )
         }}
       />
     </ScrollView>

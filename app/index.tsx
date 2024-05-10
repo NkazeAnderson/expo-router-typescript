@@ -14,13 +14,11 @@ export default function BoardingScreen() {
     Poppins_700Bold,
     Poppins_400Regular_Italic
   })
-  AsyncStorage.removeItem('auth_token')
   if (!fontsLoaded) {
     AsyncStorage.getItem('onboarded').then((value) => {
-      console.log(value)
-
       if (value !== null) {
         router.replace('/tabs/home')
+        //router.replace('/stacks/manageProperty')
       } else {
         AsyncStorage.setItem('onboarded', 'true')
       }

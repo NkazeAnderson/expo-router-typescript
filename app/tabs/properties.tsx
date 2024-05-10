@@ -17,7 +17,7 @@ const propertiesPage = () => {
   useEffect(() => {
     user &&
       get(`/user/${user.id}/properties/`).then((response) => {
-        setProperties(response.data.results)
+        setProperties(response.data)
       })
   }, [user])
 

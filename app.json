@@ -10,7 +10,9 @@
       "image": "./src/assets/images/splash.png",
       "backgroundColor": "#222"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false
     },
@@ -19,7 +21,11 @@
         "foregroundImage": "./src/assets/images/app-icon.png",
         "backgroundColor": "#222"
       },
-      "package": "com.haytherecharlie.exporoutertypescript"
+      "package": "com.haytherecharlie.exporoutertypescript",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "favicon": "./src/assets/images/app-icon.png",
@@ -51,6 +57,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "f3a2b480-3696-4add-9f9e-b6ea10d778f6"
       }
     }
   }
